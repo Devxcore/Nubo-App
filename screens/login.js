@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, Image } from 'react-native';
 
 const LoginScreen = () => {
     const [username, setUsername] = useState('');
@@ -12,7 +12,17 @@ const LoginScreen = () => {
     };
 
     return (
+
+       
+
         <View style={styles.container}>
+
+        <View>
+            <Image source={require('../assets/Nubo-Logo.png')}  style={styles.nuboLogo1}
+        
+        />
+        </View>
+        
             <Text style={styles.loginLabel}>Login</Text>
             <TextInput
                 style={styles.input}
@@ -30,7 +40,44 @@ const LoginScreen = () => {
             <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
                 <Text style={styles.loginButtonText}>Get Started</Text>
             </TouchableOpacity>
-        </View>
+
+            <Text style={styles.forgotPassword}>Forgot password?</Text>
+
+            <Text style={styles.orText}>OR</Text>
+
+            <TouchableOpacity style={styles.buttonGoogle}>
+            <Image source={require('../assets/google-icon.png')}  style={styles.googleicon}  
+             />
+                 <Text>Sign in with Google</Text>
+         </TouchableOpacity>
+
+         <View style={styles.signUpContainer}>
+
+        <Text>Don't Have An Account? </Text>
+        <TouchableOpacity onPress={() => console.log('Navigate to Sign Up')}>
+          <Text style={styles.signUpText}>Sign Up</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.footer}>
+
+        <Text style={styles.footerText}>By continuing, you agree to our </Text>
+
+        <TouchableOpacity onPress={() => console.log('Terms of Service')}>
+          <Text style={styles.linkText}>Terms of Service</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.footerText}> and </Text>
+
+        <TouchableOpacity onPress={() => console.log('Privacy Policy')}>
+          <Text style={styles.linkText}>Privacy Policy</Text>
+        </TouchableOpacity>
+
+      </View>
+    
+
+
+      </View>
     );
 };
 
@@ -39,7 +86,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 16,
+        padding: 30,
     },
     loginLabel: {
         fontSize: 24,
@@ -57,11 +104,18 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         backgroundColor: '#E5E5E5',
     },
+    nuboLogo1: {
+        height: 100,
+        width: 100,
+        alignItems: "center" ,
+        flexDirection: 'column' ,
+        
+    },
     loginButton: {
         backgroundColor: '#66B440',
         padding: 10,
         borderRadius: 20,
-        width: '80%',
+        width: '95%',
         height: 50,
         justifyContent: 'center',
         marginTop: 10,
@@ -73,6 +127,54 @@ const styles = StyleSheet.create({
         fontSize: 18,
         textAlignVertical: 'center',
     },
+    forgotPassword: {
+        color: '#4CAF50',
+        marginBottom: 10,
+        padding: 10,
+    },
+    orText: {
+        marginVertical: 10,
+    },
+    buttonGoogle: {
+        backgroundColor: 'white',
+        padding: 15,
+        borderRadius: 20,
+        alignItems: 'center',
+        width: '95%',
+        marginBottom: 10,
+        flexDirection: 'row',
+        justifyContent: 'center',
+    },
+    googleicon: {
+        height: 25,
+        width: 25,
+        marginRight: '5%',
+
+    },
+    signUpContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 10,
+    },
+    signUpText: {
+        color: '#4CAF50',
+        fontWeight: 'bold',
+    },
+    footer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 50,
+      },
+      footerText: {
+        color: '#666',
+      },
+      linkText: {
+        color: '#4CAF50',
+        textDecorationLine: 'underline',
+      },
+    
 });
 
 export default LoginScreen;
