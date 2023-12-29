@@ -1,14 +1,31 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { FIREBASE_AUTH } from '../FireBaseConfig';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 const LoginScreen = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const auth = FIREBASE_AUTH;
 
-    const handleLogin = () => {
-
+    const handleLogin = async () => {
+        
         console.log('Username:', username);
         console.log('Password:', password);
+
+        const response = await signInWithEmailAndPassword(auth, username, password);
+        console.log(response);
+        // try {
+            // Sign in with Firebase
+            // await firebase.auth().signInWithEmailAndPassword(username, password);
+      
+            // Navigate to the Home screen upon successful login
+            // navigation.navigate('home');
+        //   } catch (error) {
+        //     console.error('Login failed:', error.message);
+        //   }
+
+        
     };
 
     return (
