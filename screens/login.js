@@ -25,19 +25,7 @@ const LoginScreen = () => {
         } finally {
             setLoading(false);
         }
-        
-        
-        // try {
-            // Sign in with Firebase
-            // await firebase.auth().signInWithEmailAndPassword(username, password);
-      
-            // Navigate to the Home screen upon successful login
-            // navigation.navigate('home');
-        //   } catch (error) {
-        //     console.error('Login failed:', error.message);
-        //   }
-
-        
+    
     };
 
     return (
