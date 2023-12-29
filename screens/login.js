@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { FIREBASE_AUTH } from '../FireBaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet, Image } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, Image, ActivityIndicator } from 'react-native';
 
 
 const LoginScreen = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
     const auth = FIREBASE_AUTH;
 
     const handleLogin = async () => {
@@ -14,8 +15,18 @@ const LoginScreen = () => {
         console.log('Username:', username);
         console.log('Password:', password);
 
-        const response = await signInWithEmailAndPassword(auth, username, password);
-        console.log(response);
+        setLoading(true);
+        try{
+            const response = await signInWithEmailAndPassword(auth, username, password);
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+            alert('Login failed: ' + error.message)
+        } finally {
+            setLoading(false);
+        }
+        
+        
         // try {
             // Sign in with Firebase
             // await firebase.auth().signInWithEmailAndPassword(username, password);
@@ -35,11 +46,11 @@ const LoginScreen = () => {
 
         <View style={styles.container}>
 
-        <View>
+        {/* <View>
             <Image source={require('../assets/Nubo-Logo.png')}  style={styles.nuboLogo1}
         
         />
-        </View>
+        </View> */}
         
             <Text style={styles.loginLabel}>Login</Text>
             <TextInput
@@ -55,17 +66,20 @@ const LoginScreen = () => {
                 onChangeText={(text) => setPassword(text)}
                 value={password}
             />
-            <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+
+            {loading ? (<ActivityIndicator size ="large" color="0000ff"/>)
+            : (<TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
                 <Text style={styles.loginButtonText}>Get Started</Text>
-            </TouchableOpacity>
+            </TouchableOpacity>) }
+
 
             <Text style={styles.forgotPassword}>Forgot password?</Text>
 
             <Text style={styles.orText}>OR</Text>
 
             <TouchableOpacity style={styles.buttonGoogle}>
-            <Image source={require('../assets/google-icon.png')}  style={styles.googleicon}  
-             />
+            {/* <Image source={require('../assets/google-icon.png')}  style={styles.googleicon}  
+             /> */}
                  <Text>Sign in with Google</Text>
          </TouchableOpacity>
 
