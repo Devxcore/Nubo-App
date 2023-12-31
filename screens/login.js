@@ -34,11 +34,11 @@ const LoginScreen = () => {
 
         <View style={styles.container}>
 
-        {/* <View>
+       <View>
             <Image source={require('../assets/Nubo-Logo.png')}  style={styles.nuboLogo1}
         
         />
-        </View> */}
+        </View> 
         
             <Text style={styles.loginLabel}>Login</Text>
             <TextInput
@@ -66,8 +66,8 @@ const LoginScreen = () => {
             <Text style={styles.orText}>OR</Text>
 
             <TouchableOpacity style={styles.buttonGoogle}>
-            {/* <Image source={require('../assets/google-icon.png')}  style={styles.googleicon}  
-             /> */}
+           <Image source={require('../assets/google-icon.png')}  style={styles.googleicon}  
+             /> 
                  <Text>Sign in with Google</Text>
          </TouchableOpacity>
 
