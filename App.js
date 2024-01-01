@@ -4,9 +4,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './screens/login'; 
 import { UserFireBase, onAuthStateChanged } from 'firebase/auth';
-// import SignUpScreen from './screens/signUp';
+import SignUpScreen from './screens/signUp';
 // import ResetPasswordScreen from './screens/reset';
-// import CreateProfileScreen from './screens/createProfile';
+import CreateProfileScreen from './screens/createProfile';
 import DashboardScreen from './screens/dashboard';
 import { useEffect, useState } from 'react';
 import { FIREBASE_AUTH } from './FireBaseConfig';
@@ -16,12 +16,14 @@ const Stack = createStackNavigator();
 
 const App = () => {
   const [user, setUser] = useState(null);
-  
+  const [hasProfileData, setHasProfileData] = useState(false);
+
   useEffect(() => {
     onAuthStateChanged(FIREBASE_AUTH, (user) => {
       console.log('user is: ', user);
       setUser(user);
     });
+    // setHasProfileData(false);
   }, []);
 
 
@@ -29,16 +31,31 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator>
 
-        {user ? (<Stack.Screen
+        { (user && hasProfileData) ? (<Stack.Screen
           name="DashboardScreen"
           component={DashboardScreen}
           options={{ headerShown: false }} 
         />)  
-        : (<Stack.Screen
+        : (
+        <>
+        <Stack.Screen
           name="LoginScreen"
           component={LoginScreen}
           options={{ headerShown: false }} 
-        />)}
+        />
+        <Stack.Screen
+        name="SignUpScreen"
+        component={SignUpScreen}
+        options={{ headerShown: false }}
+        />
+         <Stack.Screen
+        name="CreateProfileScreen"
+        component={CreateProfileScreen}
+        options={{ headerShown: false }}
+        />
+
+        </>
+        )}
 
       </Stack.Navigator>
     </NavigationContainer>

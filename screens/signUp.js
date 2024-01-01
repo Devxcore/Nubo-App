@@ -1,18 +1,39 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, TextInput, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { FIREBASE_AUTH } from '../FireBaseConfig';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
-const SignUpScreen = () => {
+const SignUpScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const auth = FIREBASE_AUTH;
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     // Implement your sign-up logic here
-    console.log('Sign up with:', email, password);
+    console.log('Sign up with:', email, password);    
+
+    setLoading(true);
+    try{
+        const response = await createUserWithEmailAndPassword(auth, email, password);
+        console.log(response);
+        navigation.navigate('CreateProfileScreen');
+    } catch (error) {
+        console.log(error);
+        alert('Sign up failed: ' + error.message)
+    } finally {
+        setLoading(false);
+    }    
+  };
+
+  const handleLogin = () => {
+    // Navigate to the SignUp screen
+    navigation.goBack();
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <TouchableOpacity onPress={() => console.log('Back button pressed')} style={styles.backButton}>
+      <TouchableOpacity onPress={handleLogin} style={styles.backButton}>
         <Text style={styles.backButtonText}>{'< Back'}</Text>
       </TouchableOpacity>
       
@@ -58,7 +79,7 @@ const SignUpScreen = () => {
 
       <View style={styles.loginContainer}>
         <Text>Already Have An Account? </Text>
-        <TouchableOpacity onPress={() => console.log('Navigate to Log In')}>
+        <TouchableOpacity onPress={handleLogin}>
           <Text style={styles.loginText}>Log In</Text>
         </TouchableOpacity>
       </View>
