@@ -42,6 +42,7 @@ const App = () => {
           name="LoginScreen"
           component={LoginScreen}
           options={{ headerShown: false }} 
+          initialParams={{ setHasProfileData }}
         />
         <Stack.Screen
         name="SignUpScreen"
@@ -52,6 +53,7 @@ const App = () => {
         name="CreateProfileScreen"
         component={CreateProfileScreen}
         options={{ headerShown: false }}
+        initialParams={{ setHasProfileData }}
         />
 
         </>

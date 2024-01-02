@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, TextInput, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
 
-const CreateProfileScreen = () => {
+const CreateProfileScreen = ({ route }) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
   const [age, setAge] = useState('');
   const [weight, setWeight] = useState('');
+  const setHasProfileData = route.params?.setHasProfileData || (() => {});
 
   const handleContinue = () => {
     // Implement your logic to handle the continue action
     console.log('Profile details:', { firstName, lastName, mobileNumber, age, weight });
+    setHasProfileData(true);
   };
 
   return (
