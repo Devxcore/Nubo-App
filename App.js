@@ -3,6 +3,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './screens/login'; 
+import ProfileSettingsScreen from './screens/settings';
+import FoodDiaryScreen from './screens/foodDairyMain';
+import LunchLogScreen from './screens/lunchLog';
 // import SignUpScreen from './screens/signUp';
 // import ResetPasswordScreen from './screens/reset';
 // import CreateProfileScreen from './screens/createProfile';
@@ -15,9 +18,10 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+     
         <Stack.Screen
-          name="LoginScreen"
-          component={LoginScreen}
+          name="LunchLog"
+          component={LunchLogScreen}
           options={{ headerShown: false }} 
         />
       </Stack.Navigator>
