@@ -2,10 +2,13 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons'; // Ensure you have the @expo/vector-icons library installed
 import { useNavigation } from '@react-navigation/native';
+import { signOut } from 'firebase/auth';
+import { FIREBASE_AUTH } from '../FireBaseConfig';
 
 const ProfileSettingsScreen = () => {
   
   
+  const auth = FIREBASE_AUTH;
   
   // Navigation Funtionality Starts Here **** 
 
@@ -14,6 +17,7 @@ const ProfileSettingsScreen = () => {
  // back button navigate to Dashborad Page
 
  const navigateToDashboard = () => {
+  console.log("Back button pressed");
     navigation.navigate('Dashboard'); 
   };
 
@@ -21,7 +25,10 @@ const ProfileSettingsScreen = () => {
     navigation.navigate('EditProfie'); 
   };
 
-
+  const signOutAndNavigateToLogin = async () => {
+    console.log("sign out from settings")
+    await signOut(auth);
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -42,7 +49,7 @@ const ProfileSettingsScreen = () => {
         {MenuItem('Settings', 'cog', () => navigateToScreen('Settings'))}
         {MenuItem('Track Your Progress', 'chart-line', () => navigateToScreen('TrackProgress'))}
         {MenuItem('Terms & Privacy Policy', 'file-contract', () => navigateToScreen('TermsPrivacy'))}
-        {MenuItem('Log Out', 'sign-out-alt', () => navigateToScreen('Logout'))}
+        {MenuItem('Log Out', 'sign-out-alt', () => signOutAndNavigateToLogin())}
       </View>
 
     </View>
