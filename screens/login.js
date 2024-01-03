@@ -4,20 +4,21 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Image, ActivityIndicator } from 'react-native';
 
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation, route }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const auth = FIREBASE_AUTH;
+    const setHasProfileData = route.params?.setHasProfileData || (() => {});
 
     const handleLogin = async () => {
         
         console.log('Username:', username);
         console.log('Password:', password);
-
         setLoading(true);
         try{
             const response = await signInWithEmailAndPassword(auth, username, password);
+            setHasProfileData(true);
             console.log(response);
         } catch (error) {
             console.log(error);
@@ -25,7 +26,11 @@ const LoginScreen = () => {
         } finally {
             setLoading(false);
         }
-    
+    };
+
+    const handleSignUpPress = () => {
+        // Navigate to the SignUp screen
+        navigation.navigate('SignUpScreen');
     };
 
     return (
@@ -74,7 +79,7 @@ const LoginScreen = () => {
          <View style={styles.signUpContainer}>
 
         <Text>Don't Have An Account? </Text>
-        <TouchableOpacity onPress={() => console.log('Navigate to Sign Up')}>
+        <TouchableOpacity onPress={handleSignUpPress}>
           <Text style={styles.signUpText}>Sign Up</Text>
         </TouchableOpacity>
       </View>

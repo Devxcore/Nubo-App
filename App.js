@@ -1,42 +1,71 @@
+import ProfileSettingsScreen from "./screens/settings";
+import FoodDiaryScreen from "./screens/foodDairyMain";
+import LunchLogScreen from "./screens/lunchLog";
+
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import LoginScreen from "./screens/login";
-import ProfileSettingsScreen from "./screens/settings";
-import FoodDiaryScreen from "./screens/foodDairyMain";
-import LunchLogScreen from "./screens/lunchLog";
-// import SignUpScreen from './screens/signUp';
+import { UserFireBase, onAuthStateChanged } from "firebase/auth";
+import SignUpScreen from "./screens/signUp";
 // import ResetPasswordScreen from './screens/reset';
-// import CreateProfileScreen from './screens/createProfile';
-// import DashboardScreen from './screens/dashboard';
+import CreateProfileScreen from "./screens/createProfile";
+import DashboardScreen from "./screens/dashboard";
+import { useEffect, useState } from "react";
+import { FIREBASE_AUTH } from "./FireBaseConfig";
 
 const Stack = createStackNavigator();
 
 const App = () => {
+  const [user, setUser] = useState(null);
+  const [hasProfileData, setHasProfileData] = useState(false);
+
+  useEffect(() => {
+    onAuthStateChanged(FIREBASE_AUTH, (user) => {
+      console.log("user is: ", user);
+      setUser(user);
+    });
+    // setHasProfileData(false);
+  }, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
-          name="LoginScreen"
-          component={LoginScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="SettingsScreen"
-          component={ProfileSettingsScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="FoodDairyMain"
-          component={FoodDiaryScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="LunchLog"
-          component={LunchLogScreen}
-          options={{ headerShown: false }}
-        />
+        {user && hasProfileData ? (
+          <>
+            <Stack.Screen
+              name="DashboardScreen"
+              component={DashboardScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Settings"
+              component={ProfileSettingsScreen}
+              options={{ headerShown: false }}
+            />
+          </>
+        ) : (
+          <>
+            <Stack.Screen
+              name="LoginScreen"
+              component={LoginScreen}
+              options={{ headerShown: false }}
+              initialParams={{ setHasProfileData }}
+            />
+            <Stack.Screen
+              name="SignUpScreen"
+              component={SignUpScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="CreateProfileScreen"
+              component={CreateProfileScreen}
+              options={{ headerShown: false }}
+              initialParams={{ setHasProfileData }}
+            />
+          </>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );
