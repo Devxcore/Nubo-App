@@ -1,28 +1,41 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import LoginScreen from './screens/login'; 
-import ProfileSettingsScreen from './screens/settings';
-import FoodDiaryScreen from './screens/foodDairyMain';
-import LunchLogScreen from './screens/lunchLog';
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import LoginScreen from "./screens/login";
+import ProfileSettingsScreen from "./screens/settings";
+import FoodDiaryScreen from "./screens/foodDairyMain";
+import LunchLogScreen from "./screens/lunchLog";
 // import SignUpScreen from './screens/signUp';
 // import ResetPasswordScreen from './screens/reset';
 // import CreateProfileScreen from './screens/createProfile';
 // import DashboardScreen from './screens/dashboard';
- 
-const Stack = createStackNavigator();
 
+const Stack = createStackNavigator();
 
 const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-     
+        <Stack.Screen
+          name="LoginScreen"
+          component={LoginScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SettingsScreen"
+          component={ProfileSettingsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="FoodDairyMain"
+          component={FoodDiaryScreen}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="LunchLog"
           component={LunchLogScreen}
-          options={{ headerShown: false }} 
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

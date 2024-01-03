@@ -59,7 +59,6 @@ const LunchLogScreen = () => {
           item.id === id ? { ...item, ...detailsData } : item
         )
       );
-      console.log(detailsData);
     } catch (error) {
       console.error("Error fetching ingredient details:", error);
     } finally {
