@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   FlatList,
   ActivityIndicator,
+  Image,
 } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
@@ -17,12 +18,13 @@ import {
   faBell,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
-const LunchLogScreen = () => {
+const LunchLogScreen = ({ navigation }) => {
   const [searchText, setSearchText] = useState("");
   const [foodItems, setFoodItems] = useState([]);
   const [loading, setLoading] = useState(false);
-  const apiKey = "d3c0bd1407164ef3ad9514b48cf4f0d3"; // Should be stored securely
+  const apiKey = "d3c0bd1407164ef3ad9514b48cf4f0d3"; // Replace with your actual API key
 
   const fetchIngredients = async () => {
     if (searchText.trim() === "") return;
@@ -30,12 +32,13 @@ const LunchLogScreen = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `https://api.spoonacular.com/food/ingredients/search?apiKey=${apiKey}&query=${encodeURIComponent(
+        `https://api.spoonacular.com/food/products/search?apiKey=${apiKey}&query=${encodeURIComponent(
           searchText
-        )}`
+        )}&addProductInformation=true`
       );
       const data = await response.json();
-      setFoodItems(data.results || []);
+      setFoodItems(data.products || []);
+      console.log(data);
     } catch (error) {
       console.error("Error fetching ingredients:", error);
     } finally {
@@ -43,60 +46,46 @@ const LunchLogScreen = () => {
     }
   };
 
-  const fetchIngredientDetails = async (id) => {
-    if (!id) return;
-
-    setLoading(true);
-    try {
-      const detailsResponse = await fetch(
-        `https://api.spoonacular.com/food/ingredients/${id}/information?apiKey=${apiKey}&amount=1`
-      );
-      const detailsData = await detailsResponse.json();
-
-      // Update the food item with the detailed information
-      setFoodItems((currentItems) =>
-        currentItems.map((item) =>
-          item.id === id ? { ...item, ...detailsData } : item
-        )
-      );
-    } catch (error) {
-      console.error("Error fetching ingredient details:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const renderFoodItem = ({ item }) => (
     <View style={styles.foodItemContainer}>
-      <TouchableOpacity onPress={() => fetchIngredientDetails(item.id)}>
-        <Text style={styles.foodName}>{item.name}</Text>
-        {item.calories && (
+      <Image source={{ uri: item.image }} style={styles.foodImage} />
+      <View>
+        <Text style={styles.foodName}>{item.title}</Text>
+        {item.nutrition && (
           <Text style={styles.foodDetails}>
-            {item.calories} cal{" "}
-            {item.amount ? ` - ${item.amount} ${item.unit}` : ""}
+            {Math.round(item.nutrition.calories)} Calories
+            {item.nutrition.nutrients.unit}
           </Text>
         )}
-      </TouchableOpacity>
+      </View>
       <FontAwesomeIcon
         icon={faHeart}
         size={18}
         color="green"
         style={styles.likeIcon}
       />
-      <FontAwesomeIcon
-        icon={faPlus}
-        size={18}
-        color="green"
-        style={styles.plusIcon}
-      />
+      <TouchableOpacity
+        onPress={() => navigation.navigate("LunchNotes", { item })}
+      >
+        <FontAwesomeIcon
+          icon={faPlus}
+          size={18}
+          color="green"
+          style={styles.plusIcon}
+        />
+      </TouchableOpacity>
     </View>
   );
 
   return (
     <View style={styles.container}>
       <View style={styles.notification}>
-        <FontAwesomeIcon icon={faChevronLeft} size={20} color="green" />
-        <FontAwesomeIcon icon={faBell} size={20} color="green" />
+        <TouchableOpacity
+          onPress={() => navigation.navigate("DashboardScreen")}
+        >
+          <FontAwesomeIcon icon={faChevronLeft} size={20} color="green" />
+          <FontAwesomeIcon icon={faBell} size={20} color="green" />
+        </TouchableOpacity>
       </View>
 
       <View style={styles.header}>
@@ -130,17 +119,15 @@ const LunchLogScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <View>
-        {loading ? (
-          <ActivityIndicator size="large" color="#4CAF50" />
-        ) : (
-          <FlatList
-            data={foodItems}
-            renderItem={renderFoodItem}
-            keyExtractor={(item) => item.id.toString()}
-          />
-        )}
-      </View>
+      {loading ? (
+        <ActivityIndicator size="large" color="#4CAF50" />
+      ) : (
+        <FlatList
+          data={foodItems}
+          renderItem={renderFoodItem}
+          keyExtractor={(item) => item.id.toString()}
+        />
+      )}
     </View>
   );
 };
@@ -200,16 +187,27 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: 25,
+    padding: 10,
     borderBottomWidth: 2,
     borderBottomColor: "#f2f2f2",
+    marginBottom: 5,
+  },
+  foodImage: {
+    width: 70,
+    height: 60,
+    borderRadius: 5,
+    marginRight: 10,
   },
   foodName: {
-    fontWeight: "bold",
+    fontWeight: "500",
+    maxWidth: "80%",
   },
   foodDetails: {
     color: "grey",
     marginTop: 10,
+    color: "#97Ce99",
+    fontWeight: "700",
+    flexDirection: "row",
   },
   likeIcon: {
     marginLeft: "auto",
