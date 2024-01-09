@@ -10,6 +10,7 @@ const LoginScreen = ({ navigation, route }) => {
     const [loading, setLoading] = useState(false);
     const auth = FIREBASE_AUTH;
     const setHasProfileData = route.params?.setHasProfileData || (() => {});
+    setHasProfileData(false);
 
     const handleLogin = async () => {
         

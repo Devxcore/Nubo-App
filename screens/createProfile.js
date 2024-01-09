@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { StyleSheet, View, TextInput, Text, TouchableOpacity, Image, ScrollView, ActivityIndicator } from 'react-native';
+import { FIREBASE_AUTH, FIREBASE_APP } from '../FireBaseConfig';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
+
+import { err } from 'react-native-svg';
 
 const CreateProfileScreen = ({ route }) => {
   const [firstName, setFirstName] = useState('');
@@ -7,12 +11,40 @@ const CreateProfileScreen = ({ route }) => {
   const [mobileNumber, setMobileNumber] = useState('');
   const [age, setAge] = useState('');
   const [weight, setWeight] = useState('');
+  const [loading, setLoading] = useState(false);
   const setHasProfileData = route.params?.setHasProfileData || (() => {});
+  const auth = FIREBASE_AUTH;
+  const firebaseApp = FIREBASE_APP;
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     // Implement your logic to handle the continue action
     console.log('Profile details:', { firstName, lastName, mobileNumber, age, weight });
-    setHasProfileData(true);
+    const userProfile = {
+      firstName: firstName,
+      lastName: lastName,
+      mobileNumber: mobileNumber,
+      age: age,
+      weight: weight,
+    };
+    setLoading(true);
+    try {
+      let currUser = auth.currentUser;
+      if(currUser) {
+        const firestore = getFirestore(firebaseApp);
+        const userDocRef = doc(firestore, 'user_profile', currUser.uid);
+        await setDoc(userDocRef, userProfile);
+
+        setHasProfileData(true);
+      } else {
+        alert('User not found!');
+      }
+    } catch (error) {
+      alert('Error: '+ error.message);
+    }
+    finally {
+      setLoading(false);
+    }
+
   };
 
   return (
@@ -77,9 +109,11 @@ const CreateProfileScreen = ({ route }) => {
         
       </View>
 
-      <TouchableOpacity onPress={handleContinue} style={styles.continueButton}>
+      {loading ? (<ActivityIndicator size ="large" color="0000ff"/>)
+            : ( <TouchableOpacity onPress={handleContinue} style={styles.continueButton}>
         <Text style={styles.continueButtonText}>Continue</Text>
-      </TouchableOpacity>
+      </TouchableOpacity>) }
+
     </ScrollView>
   );
 };

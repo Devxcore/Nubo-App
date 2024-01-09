@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { StyleSheet, View, TextInput, Text, TouchableOpacity, Image, ScrollView, ActivityIndicator} from 'react-native';
 import { FIREBASE_AUTH } from '../FireBaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
@@ -73,9 +73,10 @@ const SignUpScreen = ({ navigation }) => {
 
       <Text style={styles.orText}>OR</Text>
 
-      <TouchableOpacity onPress={handleSignUp} style={styles.button}>
-        <Text style={styles.buttonText}>Get Started</Text>
-      </TouchableOpacity>
+      {loading ? (<ActivityIndicator size ="large" color="0000ff"/>)
+            : ( <TouchableOpacity onPress={handleSignUp} style={styles.button}>
+              <Text style={styles.buttonText}>Sign Up</Text>
+            </TouchableOpacity>) }
 
       <View style={styles.loginContainer}>
         <Text>Already Have An Account? </Text>
