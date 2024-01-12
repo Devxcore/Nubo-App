@@ -21,6 +21,9 @@ const DashboardScreen = () => {
   const navigateToSettings = () => {
     navigation.navigate("Settings"); // back button navigate to Dashborad page form here
   };
+  const handleIconClick = () => {
+    navigation.navigate("WeightTracker"); // back button navigate to Dashborad page form here
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
