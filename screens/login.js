@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { FIREBASE_AUTH } from '../FireBaseConfig';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Image, ActivityIndicator } from 'react-native';
-
 
 const LoginScreen = ({ navigation, route }) => {
     const [username, setUsername] = useState('');
@@ -10,7 +10,10 @@ const LoginScreen = ({ navigation, route }) => {
     const [loading, setLoading] = useState(false);
     const auth = FIREBASE_AUTH;
     const setHasProfileData = route.params?.setHasProfileData || (() => {});
-    setHasProfileData(false);
+
+    useEffect(() => {
+        setHasProfileData(false);
+      }, []);
 
     const handleLogin = async () => {
         
