@@ -80,12 +80,8 @@ const LunchLogScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.notification}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("DashboardScreen")}
-        >
-          <FontAwesomeIcon icon={faChevronLeft} size={20} color="green" />
-          <FontAwesomeIcon icon={faBell} size={20} color="green" />
-        </TouchableOpacity>
+        <FontAwesomeIcon icon={faChevronLeft} size={20} color="green" />
+        <FontAwesomeIcon icon={faBell} size={20} color="green" />
       </View>
 
       <View style={styles.header}>
