@@ -18,7 +18,7 @@ const ProfileSettingsScreen = () => {
 
  const navigateToDashboard = () => {
   console.log("Back button pressed");
-    navigation.navigate('Dashboard'); 
+    navigation.goBack();
   };
 
   const navigateToEditProfile = () => {

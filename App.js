@@ -12,6 +12,7 @@ import SignUpScreen from "./screens/signUp";
 // import ResetPasswordScreen from './screens/reset';
 import CreateProfileScreen from "./screens/createProfile";
 import DashboardScreen from "./screens/dashboard";
+import WeightTracker from "./screens/wightTracker";
 import { useEffect, useState } from "react";
 import { FIREBASE_AUTH } from "./FireBaseConfig";
 
@@ -37,6 +38,11 @@ const App = () => {
             <Stack.Screen
               name="DashboardScreen"
               component={DashboardScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="WeightTracker"
+              component={WeightTracker}
               options={{ headerShown: false }}
             />
             <Stack.Screen

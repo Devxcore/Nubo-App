@@ -19,17 +19,20 @@ const DashboardScreen = () => {
 
   // Profile Button Navigation:
   const navigateToSettings = () => {
-    navigation.navigate("Settings"); // back button navigate to Dashborad page form here
+    navigation.navigate("Settings"); 
+  };
+  const handleWeightTracker = () => {
+    navigation.navigate("WeightTracker"); 
   };
   const handleIconClick = () => {
-    navigation.navigate("WeightTracker"); // back button navigate to Dashborad page form here
+    navigation.navigate("");
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => console.log("Back button pressed")}>
-          <Ionicons name="chevron-back-outline" size={24} color="black" />
+          {/* <Ionicons name="chevron-back-outline" size={24} color="black" /> */}
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Dashboard</Text>
         <TouchableOpacity onPress={() => console.log("Search button pressed")}>
@@ -65,7 +68,7 @@ const DashboardScreen = () => {
 
         <TouchableOpacity
           style={styles.menuItem}
-          onPress={() => handleIconClick("WeightTracker")}
+          onPress={() => handleWeightTracker()}
         >
           <Ionicons name="barbell-outline" size={24} color="green" />
           <Text style={styles.menuItemText}>Weight Tracker</Text>
