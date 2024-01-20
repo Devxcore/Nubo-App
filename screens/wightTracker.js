@@ -98,6 +98,14 @@ const WeightTrackerSection = ({ navigation }) => {
 
       <View style={styles.dateCal}>
         <Text style={styles.dateText}>Friday 29 July</Text>
+      </View>
+
+      <View>
+        <Text style={styles.sectionTitle}> Weight Tracker</Text>
+      </View>
+
+      <View style={styles.subSec}>
+        <Text style={styles.subTitle}>Your Schedule</Text>
 
         <TouchableOpacity
           onPress={showDatePicker}
@@ -111,15 +119,6 @@ const WeightTrackerSection = ({ navigation }) => {
           onConfirm={handleConfirmDate}
           onCancel={hideDatePicker}
         />
-      </View>
-
-      <View>
-        <Text style={styles.sectionTitle}> Weight Tracker</Text>
-      </View>
-
-      <View style={styles.subSec}>
-        <Text style={styles.subTitle}>Your Schedule</Text>
-        <Text style={styles.subSubTitle}>See All</Text>
       </View>
 
       <ScrollView
@@ -167,6 +166,11 @@ const WeightTrackerSection = ({ navigation }) => {
           inActiveStrokeOpacity={0.5}
         /> */}
       </View>
+
+      <View style={styles.seeAll}>
+        <Text style={styles.subSubTitle}>See All</Text>
+      </View>
+
       <FlatList
         data={weightLogData}
         renderItem={renderLogItem}
@@ -197,19 +201,21 @@ const styles = StyleSheet.create({
   dateCal: {
     justifyContent: "space-between",
     flexDirection: "row",
-    padding: 8,
+    paddingBottom: 8,
     alignContent: "center",
+    marginLeft: 8,
+    marginTop: -6,
   },
   dateText: {
     fontSize: 16,
-    paddingVertical: 1,
-    paddingBottom: 10,
+    paddingVertical: 0,
+    paddingBottom: 16,
     color: "#66B440",
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    paddingLeft: 6,
+    marginLeft: 4,
   },
   subTitle: {
     fontSize: 18,
@@ -220,11 +226,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     padding: 10,
+    marginBottom: 10,
   },
   subSubTitle: {
     color: "#66B440",
     fontSize: 18,
-    paddingTop: 8,
+    padding: 8,
+    alignSelf: "flex-end",
+    fontWeight: "600",
+    marginRight: 8,
   },
   dayPicker: {
     flexDirection: "row",
@@ -244,9 +254,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   profilePic: {
-    width: 60,
-    height: 60,
-    borderRadius: 20,
+    width: 75,
+    height: 75,
+    borderRadius: 40,
+    marginRight: 9,
+    marginTop: 4,
   },
   summaryContainer: {
     flexDirection: "row",
@@ -256,6 +268,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#E8F5E9",
     borderRadius: 10,
     marginVertical: 16,
+    marginHorizontal: 5,
   },
   summaryDetails: {
     justifyContent: "center",
