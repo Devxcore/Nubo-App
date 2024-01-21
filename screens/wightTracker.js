@@ -15,6 +15,7 @@ import {
   faPlusCircle,
   faWeightScale,
   faCalendarDays,
+  faEye,
 } from "@fortawesome/free-solid-svg-icons";
 // import { CircularProgress } from "react-native-circular-progress-indicator";
 import DateTimePickerModal from "react-native-modal-datetime-picker"; // Make sure to install this package
@@ -120,7 +121,7 @@ const WeightTrackerSection = ({ navigation }) => {
       let day = new Date(curr.setDate(weekStart + i));
       days.push({
         name: day.toLocaleString("en-us", { weekday: "short" }),
-        date: day.getDate(),
+        date: day.getDay(),
         fullDate: day,
       });
     }
@@ -209,10 +210,10 @@ const WeightTrackerSection = ({ navigation }) => {
                 styles.selectedDayItem,
             ]}
           >
-            <Text style={styles.dayText}>{day.name}</Text>
-            <Text style={styles.dateText}>{day.date}</Text>
+            <Text style={styles.dayText}>{day.name.split(',')[0]}</Text>
+            <Text style={styles.dateText}>{day.name.split(',')[1].split('/')[1]}</Text>
 
-            <FontAwesomeIcon icon={faPlusCircle} size={24} color="#4CAF50" />
+            <FontAwesomeIcon icon={faEye} size={24} color="#4CAF50" />
           </TouchableOpacity>
         ))}
       </ScrollView>

@@ -55,9 +55,10 @@ const WeightEntryScreen = ({ route, navigation }) => {
     console.log("Weight Entry:", currentWeight, "DateTime:", entryDateTime);
 
     // Navigate back to WeightTrackerScreen and pass the new log (you may need to adjust based on your state management)
-    navigation.navigate("WeightTracker", {
-      newWeightLog: { currentWeight, entryDateTime },
-    });
+    // navigation.navigate("WeightTracker", {
+    //   newWeightLog: { currentWeight, entryDateTime },
+    // });
+    navigation.goBack();
   };
 
   return (
