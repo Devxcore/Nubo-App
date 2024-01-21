@@ -6,35 +6,72 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faSearch, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import DatePicker from "@react-native-community/datetimepicker"; // Make sure to install this package
+import DatePicker from "@react-native-community/datetimepicker";
 
-const WeightEntryScreen = () => {
+const WeightEntryScreen = ({ route, navigation }) => {
   const [currentWeight, setCurrentWeight] = useState("");
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [time, setTime] = useState(new Date());
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  // Get the selected date from the navigation parameters
+  const selectedDate = route.params.selectedDate;
 
+  //Handel the date change
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowDatePicker(false);
     setDate(currentDate);
   };
 
+  // Handles the time change
+  const onChangeTime = (event, selectedTime) => {
+    const currentTime = selectedTime || time;
+    setShowTimePicker(false);
+    setTime(currentTime);
+  };
+
   const addWeightEntry = () => {
-    // Logic to handle adding the weight entry
-    console.log("Weight Entry:", currentWeight, "Date:", date);
-    // You would typically handle the date and weight data here
+    // Validate the weight entry
+    if (!currentWeight.trim()) {
+      Alert.alert("Error", "Please enter your weight.");
+      return;
+    }
+
+    // Combine date and time
+    const entryDateTime = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      time.getHours(),
+      time.getMinutes()
+    );
+
+    // Save the weight entry here (local state, AsyncStorage, or backend)
+    console.log("Weight Entry:", currentWeight, "DateTime:", entryDateTime);
+
+    // Navigate back to WeightTrackerScreen and pass the new log (you may need to adjust based on your state management)
+    navigation.navigate("WeightTracker", {
+      newWeightLog: { currentWeight, entryDateTime },
+    });
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <FontAwesomeIcon icon={faChevronLeft} size={20} color="#000" />
+        <TouchableOpacity
+          style={styles.header}
+          onPress={() => navigation.goBack()}
+        >
+          <FontAwesomeIcon icon={faChevronLeft} size={20} color="#000" />
+        </TouchableOpacity>
         <Text style={styles.headerText}>Hi, Chaya Sokol</Text>
         <Image
-          source={{ uri: "your_image_uri_here" }} // replace with your actual image uri
+          source={require("../assets/sampleUser.png")} // Needs to replace with the actual user profile image
           style={styles.profilePic}
         />
       </View>
@@ -49,7 +86,10 @@ const WeightEntryScreen = () => {
           style={styles.datePickerButton}
           onPress={() => setShowDatePicker(true)}
         >
-          <Text style={styles.datePickerText}>{date.toLocaleDateString()}</Text>
+          {/* ...   <Text style={styles.datePickerText}>{date.toLocaleDateString()}</Text>  */}
+          <Text style={styles.dateText}>
+            Date: {selectedDate.toLocaleDateString()}
+          </Text>
         </TouchableOpacity>
         {showDatePicker && (
           <DatePicker
@@ -59,6 +99,22 @@ const WeightEntryScreen = () => {
             onChange={onChangeDate}
           />
         )}
+
+        <TouchableOpacity
+          style={styles.timePickerButton}
+          onPress={() => setShowTimePicker(true)}
+        >
+          <Text style={styles.timePickerText}>{time.toLocaleTimeString()}</Text>
+        </TouchableOpacity>
+        {showTimePicker && (
+          <DatePicker
+            value={time}
+            mode="time"
+            display="default"
+            onChange={onChangeTime}
+          />
+        )}
+
         <TextInput
           style={styles.weightInput}
           value={currentWeight}
@@ -123,6 +179,13 @@ const styles = StyleSheet.create({
   },
   datePickerText: {
     fontSize: 16,
+  },
+  timePickerButton: {
+    borderColor: "#ccc",
+    borderWidth: 1,
+    padding: 16,
+    borderRadius: 8,
+    marginBottom: 16,
   },
   weightInput: {
     borderColor: "#ccc",

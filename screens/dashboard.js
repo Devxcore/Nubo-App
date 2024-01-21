@@ -19,13 +19,13 @@ const DashboardScreen = () => {
 
   // Profile Button Navigation:
   const navigateToSettings = () => {
-    navigation.navigate("Settings"); 
+    navigation.navigate("Settings");
   };
   const handleWeightTracker = () => {
-    navigation.navigate("WeightTracker"); 
+    navigation.navigate("WeightTracker");
   };
-  const handleIconClick = () => {
-    navigation.navigate("");
+  const nevigateToFoodDiary = () => {
+    navigation.navigate("FoodDiary");
   };
 
   return (
@@ -50,7 +50,7 @@ const DashboardScreen = () => {
       <View style={styles.menuContainer}>
         <TouchableOpacity
           style={styles.menuItem}
-          onPress={() => handleIconClick("FoodDiary")}
+          onPress={() => nevigateToFoodDiary()}
         >
           <Ionicons name="fast-food-outline" size={24} color="green" />
           <Text style={styles.menuItemText}>Food Diary</Text>

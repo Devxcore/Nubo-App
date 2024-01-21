@@ -15,6 +15,8 @@ import DashboardScreen from "./screens/dashboard";
 import WeightTracker from "./screens/wightTracker";
 import { useEffect, useState } from "react";
 import { FIREBASE_AUTH } from "./FireBaseConfig";
+import WeightEntryScreen from "./screens/WeightEntry";
+import WeightLogScreen from "./screens/allWeightLog";
 
 const Stack = createStackNavigator();
 
@@ -48,6 +50,26 @@ const App = () => {
             <Stack.Screen
               name="Settings"
               component={ProfileSettingsScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="WeightEntryScreen"
+              component={WeightEntryScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="FoodDiary"
+              component={FoodDiaryScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="AllWeightLog"
+              component={WeightLogScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="LunchLogScreen"
+              component={LunchLogScreen}
               options={{ headerShown: false }}
             />
           </>

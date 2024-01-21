@@ -12,6 +12,7 @@ import {
   faChevronRight,
   faSearch,
   faChevronLeft,
+  faWeightScale,
 } from "@fortawesome/free-solid-svg-icons";
 
 const weightLogs = [
@@ -24,6 +25,11 @@ const weightLogs = [
 const WeightLogScreen = () => {
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
+      <FontAwesomeIcon
+        icon={faWeightScale}
+        size="35"
+        style={{ color: "#32762e" }}
+      />
       <View style={styles.itemTextContainer}>
         <Text style={styles.dateText}>{item.date}</Text>
         <Text style={styles.timeText}>{item.time}</Text>
@@ -42,7 +48,6 @@ const WeightLogScreen = () => {
           source={{ uri: "your_image_uri_here" }} // replace with your actual image uri
           style={styles.profilePic}
         />
-        <FontAwesomeIcon icon={faSearch} size={20} color="#000" />
       </View>
       <Text style={styles.dateText}>Friday 29 July</Text>
       <View style={styles.logHeader}>
@@ -55,6 +60,7 @@ const WeightLogScreen = () => {
         data={weightLogs}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
+        style={styles.weightLogList}
       />
     </View>
   );
@@ -105,11 +111,20 @@ const styles = StyleSheet.create({
     borderBottomColor: "#EAEAEA",
   },
   itemTextContainer: {
+    flexDirection: "row",
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#EAEAEA",
     flex: 1,
+    justifyContent: "space-between",
   },
   dateText: {
     fontSize: 16,
-    color: "black",
+    paddingVertical: 0,
+    paddingBottom: 16,
+    color: "#66B440",
+    marginLeft: 8,
   },
   timeText: {
     fontSize: 16,
@@ -124,6 +139,9 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
+  },
+  weightLogList: {
+    marginTop: 16,
   },
   // ... Add any additional styling you may need
 });
