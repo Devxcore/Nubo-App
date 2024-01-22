@@ -7,10 +7,13 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faSearch, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "@react-native-community/datetimepicker";
+import { FIREBASE_AUTH, FIREBASE_APP } from '../FireBaseConfig';
+import { getFirestore, doc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
 
 const WeightEntryScreen = ({ route, navigation }) => {
   const [currentWeight, setCurrentWeight] = useState("");
@@ -18,8 +21,11 @@ const WeightEntryScreen = ({ route, navigation }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [time, setTime] = useState(new Date());
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [loading, setLoading] = useState(false);
   // Get the selected date from the navigation parameters
   const selectedDate = route.params.selectedDate;
+  const auth = FIREBASE_AUTH;
+  const firestore = getFirestore(FIREBASE_APP);
 
   //Handel the date change
   const onChangeDate = (event, selectedDate) => {
@@ -35,7 +41,7 @@ const WeightEntryScreen = ({ route, navigation }) => {
     setTime(currentTime);
   };
 
-  const addWeightEntry = () => {
+  const addWeightEntry = async () => {
     // Validate the weight entry
     if (!currentWeight.trim()) {
       Alert.alert("Error", "Please enter your weight.");
@@ -51,13 +57,33 @@ const WeightEntryScreen = ({ route, navigation }) => {
       time.getMinutes()
     );
 
-    // Save the weight entry here (local state, AsyncStorage, or backend)
-    console.log("Weight Entry:", currentWeight, "DateTime:", entryDateTime);
+    const weightDateDoc = date.getDate() + '-' + date.toLocaleDateString().split('/')[1] + '-' + date.getFullYear();
+    const weightEntry = {
+      [time.getHours()+':'+time.getMinutes()] : currentWeight
+    }
 
-    // Navigate back to WeightTrackerScreen and pass the new log (you may need to adjust based on your state management)
-    // navigation.navigate("WeightTracker", {
-    //   newWeightLog: { currentWeight, entryDateTime },
-    // });
+    console.log("Weight Entry:", weightDateDoc);
+    console.log("Weight Entry:", weightEntry);
+    
+    setLoading(true);
+    try {
+      let currUser = auth.currentUser;
+      if(currUser) {
+
+        const userDocRef = doc(firestore, 'weight_tracking', currUser.uid, 'records', weightDateDoc);
+        await setDoc(userDocRef, weightEntry, { merge: true });
+
+        console.log('Weight saved successfully!');
+      } else {
+        alert('User not found or Logged out!');
+      }
+    } catch (error) {
+      alert('Error: '+ error.message);
+    }
+    finally {
+      setLoading(false);
+    }
+    
     navigation.goBack();
   };
 
@@ -123,9 +149,15 @@ const WeightEntryScreen = ({ route, navigation }) => {
           placeholder="Current Weight"
           keyboardType="numeric"
         />
-        <TouchableOpacity style={styles.addButton} onPress={addWeightEntry}>
+        {/* <TouchableOpacity style={styles.addButton} onPress={addWeightEntry}>
           <Text style={styles.addButtonText}>Add Entry</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+        {loading ? (<ActivityIndicator size ="large" color="0000ff"/>)
+            : (  <TouchableOpacity style={styles.addButton} onPress={addWeightEntry}>
+              <Text style={styles.addButtonText}>Add Entry</Text>
+            </TouchableOpacity>) }
+
+
       </View>
     </View>
   );

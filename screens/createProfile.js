@@ -14,7 +14,7 @@ const CreateProfileScreen = ({ route }) => {
   const [loading, setLoading] = useState(false);
   const setHasProfileData = route.params?.setHasProfileData || (() => {});
   const auth = FIREBASE_AUTH;
-  const firebaseApp = FIREBASE_APP;
+  const firestore = getFirestore(FIREBASE_APP);
 
   const handleContinue = async () => {
     // Implement your logic to handle the continue action
@@ -30,7 +30,6 @@ const CreateProfileScreen = ({ route }) => {
     try {
       let currUser = auth.currentUser;
       if(currUser) {
-        const firestore = getFirestore(firebaseApp);
         const userDocRef = doc(firestore, 'user_profile', currUser.uid);
         await setDoc(userDocRef, userProfile);
 
