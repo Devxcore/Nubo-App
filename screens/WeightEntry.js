@@ -17,7 +17,7 @@ import { getFirestore, doc, setDoc, updateDoc, arrayUnion } from 'firebase/fires
 
 const WeightEntryScreen = ({ route, navigation }) => {
   const [currentWeight, setCurrentWeight] = useState("");
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(route.params.selectedDate ?? new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [time, setTime] = useState(new Date());
   const [showTimePicker, setShowTimePicker] = useState(false);
@@ -57,6 +57,7 @@ const WeightEntryScreen = ({ route, navigation }) => {
       time.getMinutes()
     );
 
+    console.log("Weight Entry:", date);
     const weightDateDoc = date.getDate() + '-' + date.toLocaleDateString().split('/')[1] + '-' + date.getFullYear();
     const weightEntry = {
       [time.getHours()+':'+time.getMinutes()] : currentWeight
@@ -83,7 +84,7 @@ const WeightEntryScreen = ({ route, navigation }) => {
     finally {
       setLoading(false);
     }
-    
+
     navigation.goBack();
   };
 
