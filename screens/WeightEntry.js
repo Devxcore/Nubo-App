@@ -13,7 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faSearch, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import DatePicker from "@react-native-community/datetimepicker";
 import { FIREBASE_AUTH, FIREBASE_APP } from '../FireBaseConfig';
-import { getFirestore, doc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 const WeightEntryScreen = ({ route, navigation }) => {
   const [currentWeight, setCurrentWeight] = useState("");
