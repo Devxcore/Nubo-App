@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -14,6 +14,8 @@ import {
   faChevronLeft,
   faWeightScale,
 } from "@fortawesome/free-solid-svg-icons";
+import { FIREBASE_AUTH, FIREBASE_APP } from '../FireBaseConfig';
+import { getFirestore, doc, setDoc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
 
 const weightLogs = [
   { id: "1", date: "07/23", time: "08:00 AM", weight: "142 lbs" },
@@ -21,6 +23,9 @@ const weightLogs = [
   { id: "3", date: "07/21", time: "08:00 AM", weight: "137 lbs" },
   // ... more entries
 ];
+// const [weightLogs, setWeightLogs]  = useState([]);
+const auth = FIREBASE_AUTH;
+const firestore = getFirestore(FIREBASE_APP);
 
 const WeightLogScreen = () => {
   const renderItem = ({ item }) => (
@@ -38,6 +43,8 @@ const WeightLogScreen = () => {
       <FontAwesomeIcon icon={faChevronRight} size={16} color="grey" />
     </View>
   );
+
+
 
   return (
     <View style={styles.container}>
