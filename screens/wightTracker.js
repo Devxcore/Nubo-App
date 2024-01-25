@@ -23,14 +23,15 @@ import {
 import DateTimePickerModal from "react-native-modal-datetime-picker"; // Make sure to install this package
 import { FIREBASE_AUTH, FIREBASE_APP } from '../FireBaseConfig';
 import { getFirestore, doc, setDoc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
+const auth = FIREBASE_AUTH;
+const firestore = getFirestore(FIREBASE_APP);
 
 const WeightTrackerSection = ({ navigation }) => {
   // const [selectedDay, setSelectedDay] = useState(new Date().getDay()); // Assuming today is Friday and is the 5th day of the week (index 4 since it's 0-indexed)
   const [selectedDay, setSelectedDay] = useState(new Date());
   const [weightLogData, setWeightLogData]  = useState([]);
   const [loading, setLoading] = useState(false);
-  const auth = FIREBASE_AUTH;
-  const firestore = getFirestore(FIREBASE_APP);
+  
   //calender to  select date and navigate to wait entry screen
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -143,13 +144,13 @@ const WeightTrackerSection = ({ navigation }) => {
 
   const [weekDays, setWeekDays] = useState(getWeekDays());
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedWeekDay, setSelectedWeekDay] = useState();
+  // const [selectedWeekDay, setSelectedWeekDay] = useState();
 
   // Function to select a day and show up to 3 weight logs
   const selectDay = async (day) => {
     console.log("date", day);
     setSelectedDate(day.fullDate);
-    setSelectedWeekDay(day);
+    // setSelectedWeekDay(day);
     const currSelectedDate = new Date(day.fullDate);
     const weightDateDoc = currSelectedDate.getDate() + '-' + currSelectedDate.toLocaleDateString().split('/')[1] + '-' + currSelectedDate.getFullYear();
     
@@ -321,6 +322,8 @@ const WeightTrackerSection = ({ navigation }) => {
               renderItem={renderLogItem}
               keyExtractor={(item) => item.id}
               style={styles.weightLogList}
+              // horizontal={false}
+              // contentContainerStyle={{ paddingBottom: 20 }}
             />) }
 
       {/*
