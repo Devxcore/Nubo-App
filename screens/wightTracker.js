@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   FlatList,
   ActivityIndicator,
 } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faSearch,
@@ -29,19 +30,15 @@ import {
   arrayUnion,
   getDoc,
 } from "firebase/firestore";
+const auth = FIREBASE_AUTH;
+const firestore = getFirestore(FIREBASE_APP);
 
 const WeightTrackerSection = ({ navigation }) => {
   // const [selectedDay, setSelectedDay] = useState(new Date().getDay()); // Assuming today is Friday and is the 5th day of the week (index 4 since it's 0-indexed)
   const [selectedDay, setSelectedDay] = useState(new Date());
-  const [weightLogData, setWeightLogData] = useState([
-    { id: "1", date: "07/12/23", time: "08:00 AM", weight: "142 lbs" },
-    { id: "2", date: "07/11/23", time: "07:45 AM", weight: "139 lbs" },
-    { id: "3", date: "07/10/23", time: "08:15 AM", weight: "137 lbs" },
-    // ... more logs
-  ]);
+  const [weightLogData, setWeightLogData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const auth = FIREBASE_AUTH;
-  const firestore = getFirestore(FIREBASE_APP);
+
   //calender to  select date and navigate to wait entry screen
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -153,11 +150,13 @@ const WeightTrackerSection = ({ navigation }) => {
 
   const [weekDays, setWeekDays] = useState(getWeekDays());
   const [selectedDate, setSelectedDate] = useState(new Date());
+  // const [selectedWeekDay, setSelectedWeekDay] = useState();
 
   // Function to select a day and show up to 3 weight logs
   const selectDay = async (day) => {
     console.log("date", day);
     setSelectedDate(day.fullDate);
+    // setSelectedWeekDay(day);
     const currSelectedDate = new Date(day.fullDate);
     const weightDateDoc =
       currSelectedDate.getDate() +
@@ -205,21 +204,21 @@ const WeightTrackerSection = ({ navigation }) => {
     } finally {
       setLoading(false);
     }
-
-    // Filter the logs for the selected day
-    // const logsForDay = weightLogData
-    //   .filter((log) => {
-    //     const logDate = new Date(log.date);
-    //     return logDate.toDateString() === day.fullDate.toDateString();
-    //   })
-    //   .slice(0, 3); // Get up to 3 logs
-    // // setFilteredLogs(logsForDay);
-    // console.log("logs: " , logsForDay);
   };
 
-  // useEffect(() => {
-  //   selectDay(selectedDay.fullDate);
+  useEffect(() => {
+    if (weekDays.length > 0) {
+      selectDay(weekDays[0]);
+    }
+  }, []);
+
+  // const onScreenFocus = useCallback(() => {
+  //   console.log('Screen 1 gained focus. Call your method here.');
+  //   console.log('Screen 1 gained focus. Call your method here.', selectedWeekDay);
+  //   selectDay(selectedWeekDay);
   // }, []);
+
+  // useFocusEffect(onScreenFocus);
 
   return (
     <View style={styles.container}>
@@ -338,6 +337,8 @@ const WeightTrackerSection = ({ navigation }) => {
           renderItem={renderLogItem}
           keyExtractor={(item) => item.id}
           style={styles.weightLogList}
+          // horizontal={false}
+          // contentContainerStyle={{ paddingBottom: 20 }}
         />
       )}
 

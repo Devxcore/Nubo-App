@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,8 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
@@ -14,6 +16,8 @@ import {
   faChevronLeft,
   faWeightScale,
 } from "@fortawesome/free-solid-svg-icons";
+import { FIREBASE_AUTH, FIREBASE_APP } from '../FireBaseConfig';
+import { getFirestore, doc, setDoc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
 
 const weightLogs = [
   { id: "1", date: "07/23", time: "08:00 AM", weight: "142 lbs" },
@@ -21,9 +25,20 @@ const weightLogs = [
   { id: "3", date: "07/21", time: "08:00 AM", weight: "137 lbs" },
   // ... more entries
 ];
+// const [weightLogs, setWeightLogs]  = useState([]);
+const auth = FIREBASE_AUTH;
+const firestore = getFirestore(FIREBASE_APP);
 
-const WeightLogScreen = () => {
+const WeightLogScreen = ({ navigation, route }) => {
+  const [weightLogData, setWeightLogData]  = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const { date } = route.params;
+  const currDate = new Date(date);
+  console.log("date1",currDate.toLocaleDateString());
+
   const renderItem = ({ item }) => (
+    
     <View style={styles.itemContainer}>
       <FontAwesomeIcon
         icon={faWeightScale}
@@ -39,29 +54,91 @@ const WeightLogScreen = () => {
     </View>
   );
 
+  const handleLogin = () => {
+    // Navigate to the SignUp screen
+    navigation.goBack();
+  };
+
+  const handleClearArray = () => {
+    // Clear the array
+    setWeightLogData([]);
+    console.log('Array cleared:', weightLogData);
+  };
+
+  const loadWeightData = async () => {
+    handleClearArray();
+    setLoading(true);
+    try {
+      let currUser = auth.currentUser;
+      if(currUser) {
+        const userDocRef = doc(firestore, 'weight_tracking', currUser.uid, 'records', currDate.toLocaleDateString().replaceAll('/','-'));
+        const weightDate = await getDoc(userDocRef);
+
+        if (weightDate.exists && weightDate.data()) {
+          const data = weightDate.data();
+          console.log('Records for', currDate, ':', data);
+          
+
+          const convertedData = Object.entries(weightDate.data()).map(([time, weight]) => ({
+            date: currDate.toLocaleDateString(),
+            time: time,
+            weight: `${weight} lbs`,
+          }));
+      
+          // Update the state with the converted data
+          setWeightLogData(convertedData);
+
+        } else {
+          console.log('No records found for', currDate);
+        }
+      } else {
+        alert('User not found or Logged out!');
+      }
+    } catch (error) {
+      alert('Error: '+ error.message);
+    }
+    finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+      loadWeightData();    
+  }, []);
+
+
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
+      <TouchableOpacity onPress={handleLogin} style={styles.backButton}>
         <FontAwesomeIcon icon={faChevronLeft} size={20} color="#000" />
+        </TouchableOpacity>
         <Text style={styles.headerText}>Hi, Chaya Sokol</Text>
         <Image
           source={{ uri: "your_image_uri_here" }} // replace with your actual image uri
           style={styles.profilePic}
         />
       </View>
-      <Text style={styles.dateText}>Friday 29 July</Text>
+      <Text style={styles.dateText}>{currDate.toDateString()}</Text>
       <View style={styles.logHeader}>
         <Text style={styles.title}>Weight Tracker</Text>
         <TouchableOpacity>
           <Text style={styles.editLogText}>Edit Log</Text>
         </TouchableOpacity>
       </View>
-      <FlatList
-        data={weightLogs}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        style={styles.weightLogList}
-      />
+
+    
+      {loading ? (<ActivityIndicator size ="large" color="0000ff"/>)
+            : (   <FlatList
+              data={weightLogData}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+              style={styles.weightLogList}
+              // horizontal={false}
+              // contentContainerStyle={{ paddingBottom: 20 }}
+            />) }
+      
     </View>
   );
 };
