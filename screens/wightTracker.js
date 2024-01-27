@@ -20,13 +20,20 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 // import { CircularProgress } from "react-native-circular-progress-indicator";
 import DateTimePickerModal from "react-native-modal-datetime-picker"; // Make sure to install this package
-import { FIREBASE_AUTH, FIREBASE_APP } from '../FireBaseConfig';
-import { getFirestore, doc, setDoc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
+import { FIREBASE_AUTH, FIREBASE_APP } from "../FireBaseConfig";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+  getDoc,
+} from "firebase/firestore";
 
 const WeightTrackerSection = ({ navigation }) => {
   // const [selectedDay, setSelectedDay] = useState(new Date().getDay()); // Assuming today is Friday and is the 5th day of the week (index 4 since it's 0-indexed)
   const [selectedDay, setSelectedDay] = useState(new Date());
-  const [weightLogData, setWeightLogData]  = useState([
+  const [weightLogData, setWeightLogData] = useState([
     { id: "1", date: "07/12/23", time: "08:00 AM", weight: "142 lbs" },
     { id: "2", date: "07/11/23", time: "07:45 AM", weight: "139 lbs" },
     { id: "3", date: "07/10/23", time: "08:15 AM", weight: "137 lbs" },
@@ -105,11 +112,10 @@ const WeightTrackerSection = ({ navigation }) => {
     navigation.goBack();
   };
 
-
   const handleClearArray = () => {
     // Clear the array
     setWeightLogData([]);
-    console.log('Array cleared:', weightLogData);
+    console.log("Array cleared:", weightLogData);
   };
 
   const renderLogItem = ({ item }) => (
@@ -153,42 +159,50 @@ const WeightTrackerSection = ({ navigation }) => {
     console.log("date", day);
     setSelectedDate(day.fullDate);
     const currSelectedDate = new Date(day.fullDate);
-    const weightDateDoc = currSelectedDate.getDate() + '-' + currSelectedDate.toLocaleDateString().split('/')[1] + '-' + currSelectedDate.getFullYear();
-    
+    const weightDateDoc =
+      currSelectedDate.getDate() +
+      "-" +
+      currSelectedDate.toLocaleDateString().split("/")[1] +
+      "-" +
+      currSelectedDate.getFullYear();
+
     handleClearArray();
     setLoading(true);
     try {
       let currUser = auth.currentUser;
-      if(currUser) {
-
-        const userDocRef = doc(firestore, 'weight_tracking', currUser.uid, 'records', weightDateDoc);
+      if (currUser) {
+        const userDocRef = doc(
+          firestore,
+          "weight_tracking",
+          currUser.uid,
+          "records",
+          weightDateDoc
+        );
         const weightDate = await getDoc(userDocRef);
 
         if (weightDate.exists && weightDate.data()) {
           const data = weightDate.data();
-          console.log('Records for', currSelectedDate, ':', data);
-          
+          console.log("Records for", currSelectedDate, ":", data);
 
-          const convertedData = Object.entries(weightDate.data()).map(([time, weight]) => ({
-            date: currSelectedDate.toLocaleDateString(),
-            time: time,
-            weight: `${weight} lbs`,
-          }))
-          .slice(0, 3);
-      
+          const convertedData = Object.entries(weightDate.data())
+            .map(([time, weight]) => ({
+              date: currSelectedDate.toLocaleDateString(),
+              time: time,
+              weight: `${weight} lbs`,
+            }))
+            .slice(0, 3);
+
           // Update the state with the converted data
           setWeightLogData(convertedData);
-
         } else {
-          console.log('No records found for', currSelectedDate);
+          console.log("No records found for", currSelectedDate);
         }
       } else {
-        alert('User not found or Logged out!');
+        alert("User not found or Logged out!");
       }
     } catch (error) {
-      alert('Error: '+ error.message);
-    }
-    finally {
+      alert("Error: " + error.message);
+    } finally {
       setLoading(false);
     }
 
@@ -202,11 +216,10 @@ const WeightTrackerSection = ({ navigation }) => {
     // // setFilteredLogs(logsForDay);
     // console.log("logs: " , logsForDay);
   };
-  
+
   // useEffect(() => {
   //   selectDay(selectedDay.fullDate);
   // }, []);
-  
 
   return (
     <View style={styles.container}>
@@ -272,8 +285,10 @@ const WeightTrackerSection = ({ navigation }) => {
                 styles.selectedDayItem,
             ]}
           >
-            <Text style={styles.dayText}>{day.name.split(',')[0]}</Text>
-            <Text style={styles.dateText}>{day.name.split(',')[1].split('/')[1]}</Text>
+            <Text style={styles.dayText}>{day.name.split(",")[0]}</Text>
+            <Text style={styles.dateText}>
+              {day.name.split(",")[1].split("/")[1]}
+            </Text>
 
             <FontAwesomeIcon icon={faEye} size={24} color="#4CAF50" />
           </TouchableOpacity>
@@ -315,13 +330,16 @@ const WeightTrackerSection = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      {loading ? (<ActivityIndicator size ="large" color="0000ff"/>)
-            : (   <FlatList
-              data={weightLogData}
-              renderItem={renderLogItem}
-              keyExtractor={(item) => item.id}
-              style={styles.weightLogList}
-            />) }
+      {loading ? (
+        <ActivityIndicator size="large" color="0000ff" />
+      ) : (
+        <FlatList
+          data={weightLogData}
+          renderItem={renderLogItem}
+          keyExtractor={(item) => item.id}
+          style={styles.weightLogList}
+        />
+      )}
 
       {/*
 
