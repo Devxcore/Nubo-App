@@ -159,7 +159,7 @@ const WeightTrackerSection = ({ navigation }) => {
     // setSelectedWeekDay(day);
     const currSelectedDate = new Date(day.fullDate);
     const weightDateDoc =
-      currSelectedDate.getDate() +
+    currSelectedDate.toLocaleDateString().split("/")[0] +
       "-" +
       currSelectedDate.toLocaleDateString().split("/")[1] +
       "-" +

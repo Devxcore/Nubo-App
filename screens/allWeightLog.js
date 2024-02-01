@@ -71,8 +71,10 @@ const WeightLogScreen = ({ navigation, route }) => {
     try {
       let currUser = auth.currentUser;
       if(currUser) {
+        console.log('Date:', currDate.toLocaleDateString().replaceAll('/','-'));
         const userDocRef = doc(firestore, 'weight_tracking', currUser.uid, 'records', currDate.toLocaleDateString().replaceAll('/','-'));
         const weightDate = await getDoc(userDocRef);
+        console.log('Record: ', weightDate);
 
         if (weightDate.exists && weightDate.data()) {
           const data = weightDate.data();

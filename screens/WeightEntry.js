@@ -58,7 +58,7 @@ const WeightEntryScreen = ({ route, navigation }) => {
     );
 
     console.log("Weight Entry:", date);
-    const weightDateDoc = date.getDate() + '-' + date.toLocaleDateString().split('/')[1] + '-' + date.getFullYear();
+    const weightDateDoc = date.toLocaleDateString().split('/')[0] + '-' + date.toLocaleDateString().split('/')[1] + '-' + date.getFullYear();
     const weightEntry = {
       [time.getHours()+':'+time.getMinutes()] : currentWeight
     }
