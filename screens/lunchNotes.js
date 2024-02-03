@@ -8,8 +8,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import DatePicker from "@react-native-community/datetimepicker"; // Make sure to install this package
+import FoodDiaryScreen from "./foodDairyMain";
 
-const LunchNotes = ({ navigation }) => {
+const LunchNotes = ({ route, navigation }) => {
   const [notes, setNotes] = useState("");
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
@@ -26,12 +27,22 @@ const LunchNotes = ({ navigation }) => {
     setMode(currentMode);
   };
 
+  const item = route.params?.item;
+
   const saveFoodDiaryEntry = () => {
     // Logic to save the food diary entry
-    // For example, send data to backend or store in local storage
-    console.log("Notes:", notes, "Date:", date);
+    // Include the item data along with notes and date
+    const foodDiaryEntry = {
+      item: item,
+      notes: notes,
+      date: date,
+    };
+
+    console.log("Food Diary Entry:", foodDiaryEntry);
+    // Save to backend or local storage as per your application logic
+
     // Navigate back or show confirmation message
-    navigation.goBack();
+    navigation.navigate("FoodDiary");
   };
 
   return (

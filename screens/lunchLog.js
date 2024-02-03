@@ -26,6 +26,13 @@ const LunchLogScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const apiKey = "d3c0bd1407164ef3ad9514b48cf4f0d3"; // Replace with your actual API key
 
+  const truncateTitle = (title, maxLength = 30) => {
+    if (title.length > maxLength) {
+      return title.substring(0, maxLength) + "...";
+    }
+    return title;
+  };
+
   const fetchIngredients = async () => {
     if (searchText.trim() === "") return;
 
@@ -50,7 +57,7 @@ const LunchLogScreen = ({ navigation }) => {
     <View style={styles.foodItemContainer}>
       <Image source={{ uri: item.image }} style={styles.foodImage} />
       <View>
-        <Text style={styles.foodName}>{item.title}</Text>
+        <Text style={styles.foodName}>{truncateTitle(item.title)}</Text>
         {item.nutrition && (
           <Text style={styles.foodDetails}>
             {Math.round(item.nutrition.calories)} Calories
@@ -80,7 +87,9 @@ const LunchLogScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.notification}>
-        <FontAwesomeIcon icon={faChevronLeft} size={20} color="green" />
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <FontAwesomeIcon icon={faChevronLeft} size={20} color="green" />
+        </TouchableOpacity>
         <FontAwesomeIcon icon={faBell} size={20} color="green" />
       </View>
 

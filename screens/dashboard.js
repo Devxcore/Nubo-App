@@ -27,6 +27,9 @@ const DashboardScreen = () => {
   const nevigateToFoodDiary = () => {
     navigation.navigate("FoodDiary");
   };
+  const handleIconClick = () => {
+    navigation.navigate("MealPlanner");
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -36,7 +39,7 @@ const DashboardScreen = () => {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Dashboard</Text>
         <TouchableOpacity onPress={() => console.log("Search button pressed")}>
-          <Ionicons name="search-outline" size={24} color="black" />
+          <Ionicons name="search-outline" size={24} color="green" />
         </TouchableOpacity>
       </View>
 
@@ -91,14 +94,14 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     backgroundColor: "#fff",
-    marginTop: 50,
+    marginTop: 0,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 10,
-    paddingTop: 20,
+    paddingTop: 65,
   },
   headerTitle: {
     fontSize: 20,

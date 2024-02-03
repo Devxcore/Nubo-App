@@ -159,7 +159,7 @@ const WeightTrackerSection = ({ navigation }) => {
     // setSelectedWeekDay(day);
     const currSelectedDate = new Date(day.fullDate);
     const weightDateDoc =
-    currSelectedDate.toLocaleDateString().split("/")[0] +
+      currSelectedDate.toLocaleDateString().split("/")[0] +
       "-" +
       currSelectedDate.toLocaleDateString().split("/")[1] +
       "-" +
@@ -225,7 +225,7 @@ const WeightTrackerSection = ({ navigation }) => {
       <View>
         {/* <FontAwesomeIcon icon={faChevronLeft} size={15} color="#000" /> */}
         <TouchableOpacity onPress={handleLogin} style={styles.backButton}>
-          <Text style={styles.backButtonText}>{"<"}</Text>
+          <FontAwesomeIcon icon={faChevronLeft} size={16} color="green" />
         </TouchableOpacity>
       </View>
 
@@ -358,8 +358,9 @@ const WeightTrackerSection = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
-    marginTop: 50,
-    padding: 10,
+    marginTop: 0,
+    paddingTop: 55,
+    padding: 8,
   },
   header: {
     flexDirection: "row",

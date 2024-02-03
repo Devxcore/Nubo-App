@@ -16,8 +16,15 @@ import {
   faChevronLeft,
   faWeightScale,
 } from "@fortawesome/free-solid-svg-icons";
-import { FIREBASE_AUTH, FIREBASE_APP } from '../FireBaseConfig';
-import { getFirestore, doc, setDoc, updateDoc, arrayUnion, getDoc } from 'firebase/firestore';
+import { FIREBASE_AUTH, FIREBASE_APP } from "../FireBaseConfig";
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+  getDoc,
+} from "firebase/firestore";
 
 const weightLogs = [
   { id: "1", date: "07/23", time: "08:00 AM", weight: "142 lbs" },
@@ -30,15 +37,14 @@ const auth = FIREBASE_AUTH;
 const firestore = getFirestore(FIREBASE_APP);
 
 const WeightLogScreen = ({ navigation, route }) => {
-  const [weightLogData, setWeightLogData]  = useState([]);
+  const [weightLogData, setWeightLogData] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const { date } = route.params;
   const currDate = new Date(date);
-  console.log("date1",currDate.toLocaleDateString());
+  console.log("date1", currDate.toLocaleDateString());
 
   const renderItem = ({ item }) => (
-    
     <View style={styles.itemContainer}>
       <FontAwesomeIcon
         icon={faWeightScale}
@@ -62,7 +68,7 @@ const WeightLogScreen = ({ navigation, route }) => {
   const handleClearArray = () => {
     // Clear the array
     setWeightLogData([]);
-    console.log('Array cleared:', weightLogData);
+    console.log("Array cleared:", weightLogData);
   };
 
   const loadWeightData = async () => {
@@ -70,59 +76,65 @@ const WeightLogScreen = ({ navigation, route }) => {
     setLoading(true);
     try {
       let currUser = auth.currentUser;
-      if(currUser) {
-        console.log('Date:', currDate.toLocaleDateString().replaceAll('/','-'));
-        const userDocRef = doc(firestore, 'weight_tracking', currUser.uid, 'records', currDate.toLocaleDateString().replaceAll('/','-'));
+      if (currUser) {
+        console.log(
+          "Date:",
+          currDate.toLocaleDateString().replaceAll("/", "-")
+        );
+        const userDocRef = doc(
+          firestore,
+          "weight_tracking",
+          currUser.uid,
+          "records",
+          currDate.toLocaleDateString().replaceAll("/", "-")
+        );
         const weightDate = await getDoc(userDocRef);
-        console.log('Record: ', weightDate);
+        console.log("Record: ", weightDate);
 
         if (weightDate.exists && weightDate.data()) {
           const data = weightDate.data();
-          console.log('Records for', currDate, ':', data);
-          
+          console.log("Records for", currDate, ":", data);
 
-          const convertedData = Object.entries(weightDate.data()).map(([time, weight]) => ({
-            date: currDate.toLocaleDateString(),
-            time: time,
-            weight: `${weight} lbs`,
-          }));
-      
+          const convertedData = Object.entries(weightDate.data()).map(
+            ([time, weight]) => ({
+              date: currDate.toLocaleDateString(),
+              time: time,
+              weight: `${weight} lbs`,
+            })
+          );
+
           // Update the state with the converted data
           setWeightLogData(convertedData);
-
         } else {
-          console.log('No records found for', currDate);
+          console.log("No records found for", currDate);
         }
       } else {
-        alert('User not found or Logged out!');
+        alert("User not found or Logged out!");
       }
     } catch (error) {
-      alert('Error: '+ error.message);
-    }
-    finally {
+      alert("Error: " + error.message);
+    } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-      loadWeightData();    
+    loadWeightData();
   }, []);
-
-
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-      <TouchableOpacity onPress={handleLogin} style={styles.backButton}>
-        <FontAwesomeIcon icon={faChevronLeft} size={20} color="#000" />
+        <TouchableOpacity onPress={handleLogin} style={styles.backButton}>
+          <FontAwesomeIcon icon={faChevronLeft} size={20} color="green" />
         </TouchableOpacity>
         <Text style={styles.headerText}>Hi, Chaya Sokol</Text>
         <Image
-          source={{ uri: "your_image_uri_here" }} // replace with your actual image uri
+          source={require("../assets/sampleUser.png")} // replace with your actual image uri
           style={styles.profilePic}
         />
       </View>
-      <Text style={styles.dateText}>{currDate.toDateString()}</Text>
+      <Text style={styles.headDateText}>{currDate.toDateString()}</Text>
       <View style={styles.logHeader}>
         <Text style={styles.title}>Weight Tracker</Text>
         <TouchableOpacity>
@@ -130,17 +142,18 @@ const WeightLogScreen = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
 
-    
-      {loading ? (<ActivityIndicator size ="large" color="0000ff"/>)
-            : (   <FlatList
-              data={weightLogData}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.id}
-              style={styles.weightLogList}
-              // horizontal={false}
-              // contentContainerStyle={{ paddingBottom: 20 }}
-            />) }
-      
+      {loading ? (
+        <ActivityIndicator size="large" color="0000ff" />
+      ) : (
+        <FlatList
+          data={weightLogData}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          style={styles.weightLogList}
+          // horizontal={false}
+          // contentContainerStyle={{ paddingBottom: 20 }}
+        />
+      )}
     </View>
   );
 };
@@ -149,7 +162,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    marginTop: 50,
+    paddingTop: 50,
   },
   header: {
     flexDirection: "row",
@@ -157,15 +170,18 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 16,
   },
+  headDateText: {
+    fontSize: 16,
+    padding: 8,
+    color: "#66B440",
+    marginLeft: 8,
+    fontWeight: "bold",
+  },
   headerText: {
     fontSize: 18,
     fontWeight: "bold",
   },
-  dateText: {
-    fontSize: 16,
-    color: "grey",
-    padding: 16,
-  },
+
   logHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -184,24 +200,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingVertical: 5,
+    paddingHorizontal: 5,
     borderBottomWidth: 1,
-    borderBottomColor: "#EAEAEA",
+    borderBottomColor: "#FFD885",
+    margin: 15,
   },
   itemTextContainer: {
     flexDirection: "row",
     paddingVertical: 20,
     paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#EAEAEA",
     flex: 1,
     justifyContent: "space-between",
+    alignContent: "center",
   },
   dateText: {
     fontSize: 16,
     paddingVertical: 0,
-    paddingBottom: 16,
+    paddingBottom: 0,
     color: "#66B440",
     marginLeft: 8,
   },
